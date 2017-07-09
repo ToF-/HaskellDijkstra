@@ -66,8 +66,22 @@ main = hspec $ do
             neighbors 0 m `shouldBe` [(1,300),(2,400),(3,200)] 
 
         it "has a list of nodes" $ do
-            nodes m  `shouldBe` [0,1,2,3,4]
+            nodes m  `shouldBe` [0,1,2,3,4,5]
 
+    describe "routes" $ do
+        it "finds the routes in a route map from a node to all other nodes" $ do
+            let m = routeMap [(0,1,300),(0,2,400),(0,3,200)
+                             ,(1,4,200),(1,2,400),(2,4,600)
+                             ,(3,4,100),(3,5,400),(4,5,200)]
+
+            toList (routes m 0) `shouldBe`  [0 :-> Route 0 Nothing
+                                            ,1 :-> Route 300 (Just 0)
+                                            ,2 :-> Route 400 (Just 0)
+                                            ,3 :-> Route 200 (Just 0)
+                                            ,4 :-> Route 300 (Just 3)
+                                            ,5 :-> Route 500 (Just 4)]
+
+            
             
     
 

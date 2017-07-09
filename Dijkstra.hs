@@ -62,7 +62,17 @@ neighbors :: Node -> RouteMap ->[Neighbor]
 neighbors = findWithDefault []
 
 nodes :: RouteMap -> [Node]
-nodes r = Data.Map.keys r
+nodes r = nub $ sort $ (Data.Map.keys r) ++ Data.List.map fst (concat (Data.Map.elems r))
 
 routes :: RouteMap -> Node -> Itinerary
-routes r n = itinerary (nodes r) n
+routes r n = calcRoutes r Data.PSQueue.empty (itinerary (nodes r) n)
+
+calcRoutes :: RouteMap -> Itinerary -> Itinerary -> Itinerary
+calcRoutes m dest srce = case Data.PSQueue.minView srce of
+                    Nothing -> dest
+                    Just ((n :-> Route d v),srce') -> calcRoutes m dest' srce''
+                        where
+                        dest' = Data.PSQueue.insert n (Route d v) dest
+                        srce''= updateItinerary srce' (neighbors n m) (n,d)
+                                
+ 
