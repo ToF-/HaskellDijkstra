@@ -6,13 +6,13 @@ main = hspec $ do
     describe "a route" $ do
         describe "when undefined" $ do
             it "has an infinite distance" $ do
-                distance undefinedRoute `shouldBe` infinite
+                distance undefinedRoute `shouldBe` maxBound
 
             it "has no via node" $ do
                 via undefinedRoute `shouldBe` Nothing
 
         describe "when defined" $ do
-            let r = route 100 4807
+            let r = route (100,2) 4807
             it "has a finite distance" $ do
                 distance r `shouldBe` 100
 
@@ -20,7 +20,7 @@ main = hspec $ do
                 via r `shouldBe` Just 4807
 
         describe "when initial" $ do
-            let r = initial
+            let r = initialRoute
             it "has a null distance" $ do
                 distance r `shouldBe` 0
 
@@ -29,11 +29,11 @@ main = hspec $ do
 
         describe "can be updated" $ do
             let r = undefinedRoute
-                r'= updateRoute 100 4807 r
+                r'= updateRoute (100,0) 4807 r
             it "with a smaller distance" $ do
-                r' `shouldBe` Route 100 (Just 4807)
+                r' `shouldBe` Route (100,0) (Just 4807)
             it "and with a smaller distance only" $ do
-                let r'' = updateRoute 150 42 r'
+                let r'' = updateRoute (150,0) 42 r'
                 r'' `shouldBe` r' 
 
     describe "an itinerary" $ do
@@ -42,21 +42,21 @@ main = hspec $ do
             toList i  `shouldBe` [0 :-> Route infinite Nothing
                                  ,1 :-> Route infinite Nothing
                                  ,2 :-> Route infinite Nothing
-                                 ,3 :-> Route 0 Nothing
+                                 ,3 :-> Route (0,0) Nothing
                                  ,4 :-> Route infinite Nothing] 
 
         it "can be updated with a list of neighbors to a node" $ do
-            let i'= updateItinerary i [(0,200),(1,400)] (3,0)
-            toList i' `shouldBe` [0 :-> Route 200 (Just 3)
-                                 ,1 :-> Route 400 (Just 3)
+            let i'= updateItinerary i [(0,200),(1,400)] (3,0) 1
+            toList i' `shouldBe` [0 :-> Route (200,1) (Just 3)
+                                 ,1 :-> Route (400,1) (Just 3)
                                  ,2 :-> Route infinite Nothing
-                                 ,3 :-> Route 0 Nothing
+                                 ,3 :-> Route (0,0) Nothing
                                  ,4 :-> Route infinite Nothing] 
-            let i''= updateItinerary i' [(2,300)] (0,200)
-            toList i'' `shouldBe` [0 :-> Route 200 (Just 3)
-                                 ,1 :-> Route 400 (Just 3)
-                                 ,2 :-> Route 500 (Just 0) 
-                                 ,3 :-> Route 0 Nothing
+            let i''= updateItinerary i' [(2,300)] (0,200) 1
+            toList i'' `shouldBe` [0 :-> Route (200,1) (Just 3) 
+                                 ,1 :-> Route (400,1) (Just 3)
+                                 ,2 :-> Route (500,1) (Just 0) 
+                                 ,3 :-> Route (0,0) Nothing
                                  ,4 :-> Route infinite Nothing] 
     describe "a routeMap" $ do
         let m = routeMap [(0,1,300),(0,2,400),(0,3,200)
@@ -74,12 +74,12 @@ main = hspec $ do
                              ,(1,4,200),(1,2,400),(2,4,600)
                              ,(3,4,100),(3,5,400),(4,5,200)]
 
-            toList (routes m 0) `shouldBe`  [0 :-> Route 0 Nothing
-                                            ,1 :-> Route 300 (Just 0)
-                                            ,2 :-> Route 400 (Just 0)
-                                            ,3 :-> Route 200 (Just 0)
-                                            ,4 :-> Route 300 (Just 3)
-                                            ,5 :-> Route 500 (Just 4)]
+            toList (routes m 0) `shouldBe`  [0 :-> Route (0,0) Nothing
+                                            ,1 :-> Route (300,1) (Just 0)
+                                            ,2 :-> Route (400,1) (Just 0)
+                                            ,3 :-> Route (200,1) (Just 0)
+                                            ,4 :-> Route (300,2) (Just 3)
+                                            ,5 :-> Route (500,3) (Just 4)]
 
     describe "shortest" $ do
         it "is the shortest path from a node to another in a route map" $ do
@@ -87,6 +87,23 @@ main = hspec $ do
                              ,(1,4,200),(1,2,400),(2,4,600)
                              ,(3,4,100),(3,5,400),(4,5,200)]
             shortest m 0 5 `shouldBe` [(0,0),(3,200),(4,300),(5,500)]
+
+        it "select the path with less nodes in case where several are possible" $ do
+            let m = routeMap [(0,1,100),(0,2,100),(1,3,050),(2,4,100),(3,4,50)]
+            toList (routes m 0) `shouldBe` [0 :-> Route (0,0) Nothing
+                                           ,1 :-> Route (100,1) (Just 0)
+                                           ,2 :-> Route (100,1) (Just 0)
+                                           ,3 :-> Route (150,2) (Just 1)
+                                           ,4 :-> Route (200,2) (Just 2)]
+            shortest m 0 4 `shouldBe` [(0,0),(2,100),(4,200)]
+            let m = routeMap [(0,1,100),(0,2,100),(1,4,100),(2,3,50),(3,4,50)]
+            toList (routes m 0) `shouldBe` [0 :-> Route (0,0) Nothing
+                                           ,1 :-> Route (100,1) (Just 0)
+                                           ,2 :-> Route (100,1) (Just 0)
+                                           ,3 :-> Route (150,2) (Just 2)
+                                           ,4 :-> Route (200,2) (Just 1)]
+            shortest m 0 4 `shouldBe` [(0,0),(1,100),(4,200)]
+            
 
 
             
