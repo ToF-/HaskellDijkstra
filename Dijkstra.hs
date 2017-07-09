@@ -4,6 +4,8 @@ import Data.PSQueue
 type Distance = Int
 type Node     = Int
 data Route    = Route Distance (Maybe Node)
+    deriving (Eq,Ord,Show)
+type Itinerary = PSQ Node Route
 
 infinite :: Distance
 infinite = maxBound
@@ -22,3 +24,10 @@ route d n = Route d (Just n)
 
 initial :: Route
 initial = Route 0 Nothing
+
+itinerary :: [Node] -> Node -> Itinerary
+itinerary ns st = fromList $ map initRoute ns
+    where
+    initRoute :: Node -> Binding Node Route
+    initRoute n | n == st   = n :-> Route 0 Nothing
+                | otherwise = n :-> Route infinite Nothing

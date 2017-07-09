@@ -26,5 +26,14 @@ main = hspec $ do
 
             it "has no via node" $ do
                 via r `shouldBe` Nothing
+
+    describe "an itinerary" $ do
+        it "can be initialized with a list of nodes and a starting node" $ do
+            let i = itinerary [0..4] 3
+            toList i  `shouldBe` [0 :-> Route infinite Nothing
+                                 ,1 :-> Route infinite Nothing
+                                 ,2 :-> Route infinite Nothing
+                                 ,3 :-> Route 0 Nothing
+                                 ,4 :-> Route infinite Nothing] 
             
                 
