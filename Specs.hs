@@ -81,6 +81,14 @@ main = hspec $ do
                                             ,4 :-> Route 300 (Just 3)
                                             ,5 :-> Route 500 (Just 4)]
 
+    describe "shortest" $ do
+        it "is the shortest path from a node to another in a route map" $ do
+            let m = routeMap [(0,1,300),(0,2,400),(0,3,200)
+                             ,(1,4,200),(1,2,400),(2,4,600)
+                             ,(3,4,100),(3,5,400),(4,5,200)]
+            shortest m 0 5 `shouldBe` [(0,0),(3,200),(4,300),(5,500)]
+
+
             
             
     

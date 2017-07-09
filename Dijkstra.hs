@@ -76,3 +76,10 @@ calcRoutes m dest srce = case Data.PSQueue.minView srce of
                         srce''= updateItinerary srce' (neighbors n m) (n,d)
                                 
  
+shortest :: RouteMap -> Node -> Node -> [(Node,Distance)]
+shortest m s e = reverse (pathTo (Just e) (routes m s))
+
+pathTo :: Maybe Node -> Itinerary -> [(Node,Distance)]
+pathTo Nothing _ = []
+pathTo (Just n) i = case Data.PSQueue.lookup n i of
+    Just (Route d v) -> (n,d) : pathTo v i
