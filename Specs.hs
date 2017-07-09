@@ -15,4 +15,7 @@ main = hspec $ do
             let r = route 100 4807
             it "has a finite distance" $ do
                 distance r `shouldBe` 100
+
+            it "has a via node" $ do
+                via r `shouldBe` Just 4807
                 
