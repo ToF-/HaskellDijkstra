@@ -29,20 +29,28 @@ main = hspec $ do
 
         describe "can be updated" $ do
             let r = undefinedRoute
-                r'= updateRoute r 100 4807 
+                r'= updateRoute 100 4807 r
             it "with a smaller distance" $ do
                 r' `shouldBe` Route 100 (Just 4807)
             it "and with a smaller distance only" $ do
-                let r'' = updateRoute r' 150 42
+                let r'' = updateRoute 150 42 r'
                 r'' `shouldBe` r' 
 
             
 
     describe "an itinerary" $ do
+        let i = itinerary [0..4] 3
         it "can be initialized with a list of nodes and a starting node" $ do
-            let i = itinerary [0..4] 3
             toList i  `shouldBe` [0 :-> Route infinite Nothing
                                  ,1 :-> Route infinite Nothing
+                                 ,2 :-> Route infinite Nothing
+                                 ,3 :-> Route 0 Nothing
+                                 ,4 :-> Route infinite Nothing] 
+
+        it "can be updated with a list of neighbors to a node" $ do
+            let i'= updateItinerary i [(0,2),(1,4)] (3,0)
+            toList i' `shouldBe` [0 :-> Route 2 (Just 3)
+                                 ,1 :-> Route 4 (Just 3)
                                  ,2 :-> Route infinite Nothing
                                  ,3 :-> Route 0 Nothing
                                  ,4 :-> Route infinite Nothing] 

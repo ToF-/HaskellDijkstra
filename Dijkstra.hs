@@ -32,6 +32,14 @@ itinerary ns st = fromList $ map initRoute ns
     initRoute n | n == st   = n :-> Route 0 Nothing
                 | otherwise = n :-> Route infinite Nothing
 
-updateRoute :: Route -> Distance -> Node -> Route
-updateRoute r d n | d < distance r = Route d (Just n)
+updateRoute :: Distance -> Node -> Route -> Route
+updateRoute d n r | d < distance r = Route d (Just n)
                   | otherwise      = r
+
+
+updateItinerary :: Itinerary -> [(Node,Distance)] -> (Node,Distance) -> Itinerary
+updateItinerary i [] _ = i
+updateItinerary i ((n,d):nds) (v,c) = updateItinerary adjusted nds (v,c)
+    where
+    adjusted :: Itinerary
+    adjusted = adjust (updateRoute (c+d) v) n i
