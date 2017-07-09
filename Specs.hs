@@ -27,6 +27,11 @@ main = hspec $ do
             it "has no via node" $ do
                 via r `shouldBe` Nothing
 
+        describe "can be updated" $ do
+            let r = initial
+            it "with a smaller distance" $ do
+                updateRoute r 100 4807 `shouldBe` Route 100 (Just 4807)
+
     describe "an itinerary" $ do
         it "can be initialized with a list of nodes and a starting node" $ do
             let i = itinerary [0..4] 3

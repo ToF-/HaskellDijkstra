@@ -31,3 +31,6 @@ itinerary ns st = fromList $ map initRoute ns
     initRoute :: Node -> Binding Node Route
     initRoute n | n == st   = n :-> Route 0 Nothing
                 | otherwise = n :-> Route infinite Nothing
+
+updateRoute :: Route -> Distance -> Node -> Route
+updateRoute r d n = Route d (Just n)
