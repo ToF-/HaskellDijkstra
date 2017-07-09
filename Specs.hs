@@ -103,6 +103,22 @@ main = hspec $ do
                                            ,3 :-> Route (150,2) (Just 2)
                                            ,4 :-> Route (200,2) (Just 1)]
             shortest m 0 4 `shouldBe` [(0,0),(1,100),(4,200)]
+
+    describe "solve" $ do
+        it "solve a shortpath problem from a list of integers" $ do
+            let ns = [[6,0,5],[0,1,300],[0,2,400],[0,3,200]
+                             ,[1,4,200],[1,2,400],[2,4,600]
+                             ,[3,4,100],[3,5,400],[4,5,200]]
+            solve ns `shouldBe` (500,[0,3,4,5])
+
+    describe "process" $ do
+        it "process a list of string to solve the problem" $ do
+            let ss = ["6 0 5","0 1 300","0 2 400","0 3 200"
+                             ,"1 4 200","1 2 400","2 4 600"
+                             ,"3 4 100","3 5 400","4 5 200"]
+            process ss  `shouldBe` ["500","0 3 4 5"]
+
+
             
 
 

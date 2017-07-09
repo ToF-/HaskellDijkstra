@@ -88,3 +88,17 @@ pathTo :: Maybe Node -> Itinerary -> [(Node,Distance)]
 pathTo Nothing _ = []
 pathTo (Just n) i = case Data.PSQueue.lookup n i of
     Just (Route (d,c) v) -> (n,d) : pathTo v i
+
+solve :: [[Int]] -> (Distance,[Node])
+solve ([n,start,end]:edges) = let
+    m = routeMap (Data.List.map (\[a,b,c]->(a,b,c)) edges) 
+    p = shortest m start end
+    d = snd (last p)
+    ns= Data.List.map fst p
+    in (d,ns)
+solve ns = error $ "unexpected entry:" ++ (show ns)
+
+process :: [String] -> [String]
+process ss = let p = Data.List.map (Data.List.map read . words) ss 
+                 (d,ns) = solve p
+             in [show d, concat (intersperse " " (Data.List.map show ns))]
