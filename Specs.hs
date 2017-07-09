@@ -36,8 +36,6 @@ main = hspec $ do
                 let r'' = updateRoute 150 42 r'
                 r'' `shouldBe` r' 
 
-            
-
     describe "an itinerary" $ do
         let i = itinerary [0..4] 3
         it "can be initialized with a list of nodes and a starting node" $ do
@@ -60,5 +58,14 @@ main = hspec $ do
                                  ,2 :-> Route 500 (Just 0) 
                                  ,3 :-> Route 0 Nothing
                                  ,4 :-> Route infinite Nothing] 
+    describe "a routeMap" $ do
+        let m = routeMap [(0,1,300),(0,2,400),(0,3,200)
+                         ,(1,4,200),(1,2,400),(2,4,600)
+                         ,(3,4,100),(3,5,400),(4,5,200)]
+        it "can be searched for neighbors of a node" $ do
+            neighbors 0 m `shouldBe` [(1,300),(2,400),(3,200)] 
+    
+
+   
             
                 
