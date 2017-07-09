@@ -16,3 +16,6 @@ undefinedRoute = Route infinite Nothing
 
 via :: Route -> Maybe Node
 via (Route _ n) = n
+
+route :: Distance -> Node -> Route
+route d n = Route d (Just n)

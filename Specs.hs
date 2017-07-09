@@ -10,3 +10,9 @@ main = hspec $ do
 
             it "has no via node" $ do
                 via undefinedRoute `shouldBe` Nothing
+
+        describe "when defined" $ do
+            let r = route 100 4807
+            it "has a finite distance" $ do
+                distance r `shouldBe` 100
+                
