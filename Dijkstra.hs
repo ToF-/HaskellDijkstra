@@ -33,4 +33,5 @@ itinerary ns st = fromList $ map initRoute ns
                 | otherwise = n :-> Route infinite Nothing
 
 updateRoute :: Route -> Distance -> Node -> Route
-updateRoute r d n = Route d (Just n)
+updateRoute r d n | d < distance r = Route d (Just n)
+                  | otherwise      = r

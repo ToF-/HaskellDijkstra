@@ -28,12 +28,12 @@ main = hspec $ do
                 via r `shouldBe` Nothing
 
         describe "can be updated" $ do
-            let r = initial
+            let r = undefinedRoute
                 r'= updateRoute r 100 4807 
             it "with a smaller distance" $ do
                 r' `shouldBe` Route 100 (Just 4807)
             it "and with a smaller distance only" $ do
-                let r'' = update r' 50 42
+                let r'' = updateRoute r' 150 42
                 r'' `shouldBe` r' 
 
             
