@@ -48,10 +48,16 @@ main = hspec $ do
                                  ,4 :-> Route infinite Nothing] 
 
         it "can be updated with a list of neighbors to a node" $ do
-            let i'= updateItinerary i [(0,2),(1,4)] (3,0)
-            toList i' `shouldBe` [0 :-> Route 2 (Just 3)
-                                 ,1 :-> Route 4 (Just 3)
+            let i'= updateItinerary i [(0,200),(1,400)] (3,0)
+            toList i' `shouldBe` [0 :-> Route 200 (Just 3)
+                                 ,1 :-> Route 400 (Just 3)
                                  ,2 :-> Route infinite Nothing
+                                 ,3 :-> Route 0 Nothing
+                                 ,4 :-> Route infinite Nothing] 
+            let i''= updateItinerary i' [(2,300)] (0,200)
+            toList i'' `shouldBe` [0 :-> Route 200 (Just 3)
+                                 ,1 :-> Route 400 (Just 3)
+                                 ,2 :-> Route 500 (Just 0) 
                                  ,3 :-> Route 0 Nothing
                                  ,4 :-> Route infinite Nothing] 
             
