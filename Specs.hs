@@ -23,5 +23,8 @@ main = hspec $ do
             let r = initial
             it "has a null distance" $ do
                 distance r `shouldBe` 0
+
+            it "has no via node" $ do
+                via r `shouldBe` Nothing
             
                 
