@@ -18,4 +18,10 @@ main = hspec $ do
 
             it "has a via node" $ do
                 via r `shouldBe` Just 4807
+
+        describe "when initial" $ do
+            let r = initial
+            it "has a null distance" $ do
+                distance r `shouldBe` 0
+            
                 

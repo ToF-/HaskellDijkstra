@@ -19,3 +19,6 @@ via (Route _ n) = n
 
 route :: Distance -> Node -> Route
 route d n = Route d (Just n)
+
+initial :: Route
+initial = Route 0 Nothing
