@@ -29,8 +29,14 @@ main = hspec $ do
 
         describe "can be updated" $ do
             let r = initial
+                r'= updateRoute r 100 4807 
             it "with a smaller distance" $ do
-                updateRoute r 100 4807 `shouldBe` Route 100 (Just 4807)
+                r' `shouldBe` Route 100 (Just 4807)
+            it "and with a smaller distance only" $ do
+                let r'' = update r' 50 42
+                r'' `shouldBe` r' 
+
+            
 
     describe "an itinerary" $ do
         it "can be initialized with a list of nodes and a starting node" $ do
