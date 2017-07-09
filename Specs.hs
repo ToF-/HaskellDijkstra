@@ -64,6 +64,11 @@ main = hspec $ do
                          ,(3,4,100),(3,5,400),(4,5,200)]
         it "can be searched for neighbors of a node" $ do
             neighbors 0 m `shouldBe` [(1,300),(2,400),(3,200)] 
+
+        it "has a list of nodes" $ do
+            nodes m  `shouldBe` [0,1,2,3,4]
+
+            
     
 
    

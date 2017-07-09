@@ -54,9 +54,15 @@ routeMap = Data.Map.fromList
     . Prelude.map (\ps -> (fst (head ps),Prelude.map snd ps))
     . groupBy (\a b -> fst a == fst b)
     . sort
-    . Prelude.map nodeAndNeihbor
+    . Prelude.map nodeAndNeighbor
     where
-    nodeAndNeihbor (n,m,d) = (n,(m,d))
+    nodeAndNeighbor (n,m,d) = (n,(m,d))
 
 neighbors :: Node -> RouteMap ->[Neighbor]
 neighbors = findWithDefault []
+
+nodes :: RouteMap -> [Node]
+nodes r = Data.Map.keys r
+
+routes :: RouteMap -> Node -> Itinerary
+routes r n = itinerary (nodes r) n
