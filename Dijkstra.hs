@@ -13,3 +13,6 @@ distance (Route d _) = d
 
 undefinedRoute :: Route
 undefinedRoute = Route infinite Nothing
+
+via :: Route -> Maybe Node
+via (Route _ n) = n
